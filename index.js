@@ -37,4 +37,4 @@ app.post("/register", (req,res)=>{
   // send success msg
 })
 
-app.listen(8000);
+app.listen(process.env.PORT);
