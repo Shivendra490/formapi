@@ -1,60 +1,40 @@
-const { MongoClient } = require("mongodb");
-
 var cors = require("cors");
+const client = require('./connect');
 
 const express = require("express");
-const bodyParser=require('body-parser')
+const bodyParser = require("body-parser");
 
 const app = express();
 
 app.use(cors());
 
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-app.use(bodyParser.urlencoded({extended:false}))
-app.use(bodyParser.json())
-
-// const uri = `mongodb+srv://root:root1983@userdb.ekgrv.mongodb.net/userDb?retryWrites=true&w=majority`;
-// const uri=`mongodb+srv://registration:root1983@registrationcluster.ekgrv.mongodb.net/registrationDb?retryWrites=true&w=majority`
-const uri="mongodb+srv://root:root1983@registrationcluster.ekgrv.mongodb.net/registrationDb?retryWrites=true&w=majority"
-
-
-
-const client = new MongoClient(uri);
-
-// Connect to the MongoDB cluster
-client.connect();
-
-// Make the appropriate DB calls
-
+// smaple route
 app.get("/", async (req, res) => {
-  console.log(client,'hello')
-  const a=await client.db().collection("registeredUsers").findOne()
-  res.send(a);
+  const results = await client.query("SELECT * FROM users");
+  console.log(results);
+  res.send(results.rows);
 });
 
-app.post("/reg", async (req, res) => {
-  await client
-    .db()
-    .collection("registeredUsers")
-    .insertOne(req.body);
+app.get("/login", (req,res)=>{
+  // get user from req.body
+  // do validations
+  // check if username and password in db
+  // if yes --> authenticate user
+  //    no --> send error msg  --> res.status(403).send('unauthorized!')
+ 
+})
 
-  res.status(200).send({ status: "success" });
-});
+app.post("/register", (req,res)=>{
+  // get details from req.body
+  // perform validation on every field
+  // if validation fails --> send error msg
+  // if validation pass check if user already exists
+  // if already exists send msg already registered
+  // if not then register the user in db
+  // send success msg
+})
 
-const middle=(req,res,next)=>{console.log('hi',req.body)
-next()}
-
-// app.post("/reg",middle, async (req, res) => {
-//   // await client.db('userDb').collection('users').insertOne({"username":"pilu","email":"pilu@gmail.com","phone":"1234567890","password":"1234"})
-
-//   // console.log(req, req.body);
-//   res.status(200).send({ status: "success" });
-// });
-
-async function main() {
-  console.log('server started')
-}
-
-main().catch(console.error);
-
-app.listen(8080);
+app.listen(8000);
