@@ -28,6 +28,9 @@ app.get("/login", (req,res)=>{
 })
 
 app.post("/register", (req,res)=>{
+  const {username, email, phone, password} = req.body;
+  const result = await client.query(`INSERT INTO users(id,name, email,phonenumber, gender, password) values(${`h${username.splice(2)}`}, ${username}, ${email}, ${phone}, 'male', ${password})`)
+  res.send(result);
   // get details from req.body
   // perform validation on every field
   // if validation fails --> send error msg
