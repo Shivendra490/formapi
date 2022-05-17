@@ -28,8 +28,14 @@ app.get("/login", (req,res)=>{
 })
 
 app.post("/register", (req,res)=>{
-  const {username, email, phone, password} = req.body;
-  const result = await client.query(`INSERT INTO users(id,name, email,phonenumber, gender, password) values(${`h${username.splice(2)}`}, ${username}, ${email}, ${phone}, 'male', ${password})`)
+  let {username, email, phone, password} = req.body;
+  id = `'${username.slice(2)}'`
+  username = `'${username}'`
+  email = `'${email}'`
+  phone = `'${phone}'`
+  password = `'${password}'`
+  gender = 'male'
+  const result = await client.query(`INSERT INTO users(id,name, email,phonenumber, gender, password) values(${id}, ${username}, ${email} , ${phone}, ${gender}, ${password})`)
   res.send(result);
   // get details from req.body
   // perform validation on every field
